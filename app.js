@@ -58,23 +58,90 @@ function addMessage(role, text, isError = false) {
   const who = document.createElement('div');
   who.className = 'who';
   who.textContent = role === 'user' ? 'Toi' : 'Aether';
+  const blocks = role === 'assistant' ? [...text.matchAll(/<<<FILE>>>([\s\S]*?)<<<END>>>/g)].map(m => m[1].trim()) : [];
+  const visible = text.replace(/<<<FILE>>>[\s\S]*?<<<END>>>/g, '').trim();
   const bubble = document.createElement('div');
   bubble.className = 'bubble' + (isError ? ' error' : '');
-  bubble.innerHTML = role === 'user' ? esc(text).replace(/\n/g, '<br>') : markdown(text);
+  bubble.innerHTML = role === 'user' ? esc(text).replace(/\n/g, '<br>') : markdown(visible);
   body.append(who, bubble);
+  blocks.forEach(raw => { try { addFileButton(body, JSON.parse(raw)); } catch (_) {} });
 
   if (role === 'assistant' && !isError && 'speechSynthesis' in window) {
     const speakBtn = document.createElement('button');
     speakBtn.type = 'button';
     speakBtn.className = 'speak';
     speakBtn.textContent = '🔊 écouter';
-    speakBtn.addEventListener('click', () => speak(text, null, speakBtn));
+    speakBtn.addEventListener('click', () => speak(visible, null, speakBtn));
     body.appendChild(speakBtn);
   }
   wrap.appendChild(body);
   chat.appendChild(wrap);
   chat.scrollTop = chat.scrollHeight;
   return wrap;
+}
+
+/* ---------- file generation (Excel / PDF) ---------- */
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+function plain(s) { return String(s == null ? '' : s).normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+
+function makeXlsx(spec) {
+  const headers = spec.headers || [];
+  const rows = spec.rows || [];
+  const data = [headers, ...rows];
+  if (window.XLSX) {
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    ws['!cols'] = headers.map(() => ({ wch: 22 }));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Plan');
+    XLSX.writeFile(wb, spec.filename || 'plan.xlsx');
+    return;
+  }
+  const csv = data.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(';')).join('\n');
+  downloadBlob(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }), (spec.filename || 'plan.csv').replace(/\.xlsx$/i, '.csv'));
+}
+
+function makePdf(spec) {
+  const JsPDF = window.jspdf && window.jspdf.jsPDF;
+  if (!JsPDF) { addMessage('assistant', 'La librairie PDF nest pas disponible. Demande un fichier Excel à la place.', true); return; }
+  const doc = new JsPDF();
+  const headers = spec.headers || [], rows = spec.rows || [];
+  const cols = Math.max(headers.length, 1);
+  const margin = 14, usable = doc.internal.pageSize.getWidth() - margin * 2, colW = usable / cols;
+  let y = 22;
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(15);
+  doc.text(plain(spec.title || 'Plan').slice(0, 55), margin, y);
+  y += 9;
+  const drawRow = (cells, header) => {
+    const lines = cells.map(c => doc.splitTextToSize(plain(c), colW - 4));
+    const h = Math.max(...lines.map(l => l.length)) * 4.4 + 4;
+    if (y + h > doc.internal.pageSize.getHeight() - 14) { doc.addPage(); y = 18; }
+    if (header) { doc.setFillColor(30, 64, 120); doc.rect(margin, y - 3.5, usable, h, 'F'); doc.setTextColor(255, 255, 255); }
+    else doc.setTextColor(30, 40, 60);
+    doc.setFont('helvetica', header ? 'bold' : 'normal');
+    lines.forEach((ls, i) => ls.forEach((line, j) => doc.text(line, margin + i * colW + 2, y + j * 4.4 + 1)));
+    doc.setTextColor(0, 0, 0);
+    doc.setDrawColor(190, 200, 220); doc.rect(margin, y - 3.5, usable, h);
+    y += h;
+  };
+  drawRow(headers, true);
+  rows.forEach(r => drawRow(r, false));
+  doc.save(spec.filename || 'plan.pdf');
+}
+
+function addFileButton(body, spec) {
+  if (!spec || !['xlsx', 'pdf'].includes(spec.type)) return;
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'file-btn';
+  btn.textContent = spec.type === 'xlsx' ? '📊 Télécharger le Excel' : '📄 Télécharger le PDF';
+  btn.addEventListener('click', () => spec.type === 'xlsx' ? makeXlsx(spec) : makePdf(spec));
+  body.appendChild(btn);
 }
 
 function showTyping() {

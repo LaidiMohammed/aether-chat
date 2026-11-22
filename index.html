@@ -72,6 +72,8 @@
       <button class="quick" data-prompt="Fais-moi un plan de révision DevOps en 3 étapes, avec temps estimé.">Plan DevOps · 3 étapes</button>
       <button class="quick" data-prompt="Génère un quiz de 5 questions progressives sur Git.">Quiz Git · 5 questions</button>
       <button class="quick" data-prompt="Ma charge mentale est à 8/10. Aide-moi à simplifier ma journée d'étude.">Charge mentale 8/10</button>
+      <button class="quick" data-prompt="Génère un plan d'études DevOps de 4 semaines et donne-le moi en fichier Excel.">Plan Excel</button>
+      <button class="quick" data-prompt="Fais un plan de compétences M1 SI sur 6 mois et exporte-le en PDF.">Skills plan PDF</button>
     </section>
 
     <button type="button" class="ghost" id="promptBtn">Voir le prompt système</button>
@@ -106,6 +108,8 @@
       <button data-prompt="Résume-moi les 3 zones de Git en 6 lignes.">Résumé Git</button>
       <button data-prompt="Crée un quiz de 4 questions sur DevOps.">Quiz DevOps</button>
       <button data-prompt="J'ai 3h ce soir, fais-moi un planning de révision.">Planning 3h</button>
+      <button data-prompt="Exporte un plan de révision en Excel.">Excel</button>
+      <button data-prompt="Exporte un plan de compétences en PDF.">PDF</button>
     </div>
 
     <form class="composer glass" id="form">
@@ -133,6 +137,8 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

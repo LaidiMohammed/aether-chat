@@ -29,6 +29,12 @@ Interface de chat pour le persona **Aether**, propulsée par l'API Groq. Design 
 - Repli automatique si `ar-DZ` n'est pas supporté : `ar-SA` → `ar-EG` → `ar`.
 - Recommandé : **Chrome ou Edge** (meilleur support de la Web Speech API). Les voix disponibles dépendent du système et sont indiquées dans la sidebar.
 
+### Fichiers générés
+- Aether peut produire un **Excel (.xlsx)** ou un **PDF** quand tu demandes un plan d'études, un plan de compétences ou un livrable.
+- Le modèle renvoie un bloc `<<<FILE>>>` avec les colonnes et les lignes ; l'interface affiche un bouton **Télécharger** et génère le fichier dans le navigateur (SheetJS + jsPDF).
+- Repli automatique : si SheetJS est indisponible, le fichier est généré en **CSV** lisible par Excel.
+- Raccourcis « Plan Excel » et « Skills plan PDF » dans la sidebar.
+
 ### Persona
 - 4 modèles Groq sélectibles : `openai/gpt-oss-120b` (défaut), `qwen/qwen3.8-27b`, `openai/gpt-oss-20b`, `allam-2-7b`.
 - Curseur « charge mentale » 1–10 : au-delà de 7, Aether allège le plan et propose une récupération.
