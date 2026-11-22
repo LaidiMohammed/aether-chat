@@ -47,7 +47,7 @@ module.exports = async function handler(req, res) {
   if (!key) return res.status(500).json({ error: 'GROQ_API_KEY absente sur le serveur.' });
 
   try {
-    const { messages, model, load } = req.body || {};
+    const { messages, model, load, language } = req.body || {};
     if (!Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({ error: 'Messages invalides.' });
     }
@@ -56,11 +56,15 @@ module.exports = async function handler(req, res) {
     const contextNote = load
       ? { role: 'system', content: `Mental load signaled by the user: ${load}/10. Apply the mental load rules accordingly.` }
       : null;
+    const langNote = language
+      ? { role: 'system', content: `The user is speaking in ${language}. When it is ar-DZ, the user may use Algerian Arabic (Darija) or Arabizi; understand it and reply in the same variety unless they ask otherwise. Reply in the same language as the user.` }
+      : null;
 
     const payload = {
       model: chosen,
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
+        ...(langNote ? [langNote] : []),
         ...(contextNote ? [contextNote] : []),
         ...messages.slice(-24).map(m => ({
           role: m.role === 'assistant' ? 'assistant' : 'user',

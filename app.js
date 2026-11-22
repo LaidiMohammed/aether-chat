@@ -68,7 +68,7 @@ function addMessage(role, text, isError = false) {
     speakBtn.type = 'button';
     speakBtn.className = 'speak';
     speakBtn.textContent = '🔊 écouter';
-    speakBtn.addEventListener('click', () => speak(text));
+    speakBtn.addEventListener('click', () => speak(text, null, speakBtn));
     body.appendChild(speakBtn);
   }
   wrap.appendChild(body);
@@ -105,7 +105,8 @@ async function send(text) {
       body: JSON.stringify({
         messages: history,
         model: modelSel.value,
-        load: loadSel.value ? Number(loadSel.value) : null
+        load: loadSel.value ? Number(loadSel.value) : null,
+        language: voiceLang.value
       })
     });
     const data = await res.json();
@@ -114,7 +115,7 @@ async function send(text) {
     $('typing')?.remove();
     addMessage('assistant', reply);
     history.push({ role: 'assistant', content: reply });
-    if (autoSpeak.checked) speak(reply);
+    if (autoSpeak.checked && reply !== lastSpoken) { lastSpoken = reply; speak(reply); }
   } catch (err) {
     $('typing')?.remove();
     addMessage('assistant', 'Erreur : ' + err.message, true);
@@ -141,7 +142,13 @@ document.querySelectorAll('[data-prompt]').forEach(b => {
 
 /* ---------- voice ---------- */
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-let recognition = null, listening = false, finalText = '';
+let recognition = null, listening = false, finalText = '', switching = false;
+const langChain = {
+  'fr-FR': ['fr-FR', 'fr-FR'],
+  'en-US': ['en-US', 'en-US'],
+  'ar-DZ': ['ar-DZ', 'ar-SA', 'ar-EG', 'ar'],
+  'ar-SA': ['ar-SA', 'ar-EG', 'ar']
+};
 
 function setListening(on) {
   listening = on;
@@ -173,7 +180,21 @@ function ensureRecognition() {
 
   recognition.onerror = e => {
     setListening(false);
-    if (e.error === 'not-allowed') voiceText.textContent = 'Micro refusé · autorise-le dans le navigateur';
+    if (e.error === 'language-not-supported') {
+      const chain = langChain[voiceLang.value] || [voiceLang.value];
+      const idx = chain.indexOf(recognition.lang);
+      if (idx >= 0 && idx + 1 < chain.length) {
+        const next = chain[idx + 1];
+        switching = true;
+        recognition.lang = next;
+        if ([...voiceLang.options].some(o => o.value === next)) voiceLang.value = next;
+        voiceText.textContent = 'Locale non supportée · essai ' + next;
+        voiceBar.hidden = false;
+        try { recognition.start(); } catch (_) { switching = false; voiceText.textContent = 'Relance impossible, réessaie'; }
+        return;
+      }
+      voiceText.textContent = 'Aucune locale disponible pour cette langue.';
+    } else if (e.error === 'not-allowed') voiceText.textContent = 'Micro refusé · autorise-le dans le navigateur';
     else if (e.error === 'no-speech') voiceText.textContent = 'Je n’ai rien entendu, réessaie';
     else voiceText.textContent = 'Erreur micro : ' + e.error;
     voiceBar.hidden = false;
@@ -181,6 +202,7 @@ function ensureRecognition() {
   };
 
   recognition.onend = () => {
+    if (switching) { switching = false; return; }
     setListening(false);
     const txt = input.value.trim() || finalText.trim();
     if (txt && autoSend.checked) { voiceBar.hidden = true; form.requestSubmit(); }
@@ -208,9 +230,41 @@ $('stopVoice').addEventListener('click', () => { if (recognition) recognition.st
 voiceLang.addEventListener('change', () => { if (recognition) recognition.lang = voiceLang.value; });
 
 /* ---------- speech synthesis ---------- */
-let voices = [];
-function loadVoices() { if ('speechSynthesis' in window) voices = speechSynthesis.getVoices(); }
-if ('speechSynthesis' in window) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+let voices = [], speaking = false, lastSpoken = '';
+function loadVoices() {
+  if (!('speechSynthesis' in window)) return;
+  voices = speechSynthesis.getVoices();
+  const langs = [...new Set(voices.map(v => v.lang.split('-')[0].toLowerCase()))];
+  const names = [];
+  if (langs.includes('fr')) names.push('FR');
+  if (langs.includes('en')) names.push('EN');
+  if (langs.includes('ar')) names.push('AR');
+  const hint = $('voiceHint');
+  if (hint) hint.textContent = names.length
+    ? 'Voix de lecture détectées : ' + names.join(' · ') + '. Chrome / Edge recommandés.'
+    : 'Aucune voix détectée · Chrome / Edge recommandés.';
+}
+if ('speechSynthesis' in window) {
+  loadVoices();
+  speechSynthesis.onvoiceschanged = loadVoices;
+  speechSynthesis.onend = () => setSpeaking(false);
+  speechSynthesis.oncancel = () => setSpeaking(false);
+}
+
+function setSpeaking(on) {
+  speaking = on;
+  const b = $('stopSpeech');
+  if (b) b.hidden = !on;
+  document.querySelectorAll('.speak').forEach(x => {
+    x.textContent = (on && x.dataset.active === '1') ? '⏹ arrêter' : '🔊 écouter';
+  });
+}
+function stopSpeech() {
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  setSpeaking(false);
+  lastSpoken = '';
+}
+$('stopSpeech').addEventListener('click', stopSpeech);
 
 function cleanForSpeech(s) {
   return String(s)
@@ -221,8 +275,9 @@ function cleanForSpeech(s) {
     .replace(/\s+/g, ' ')
     .trim();
 }
-function speak(text, lang) {
+function speak(text, lang, btn) {
   if (!('speechSynthesis' in window)) return;
+  if (btn && speaking && btn.dataset.active === '1') { stopSpeech(); return; }
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(cleanForSpeech(text));
   u.lang = lang || voiceLang.value;
@@ -230,6 +285,9 @@ function speak(text, lang) {
   const short = u.lang.split('-')[0].toLowerCase();
   const v = voices.find(v => v.lang.toLowerCase().startsWith(short));
   if (v) u.voice = v;
+  document.querySelectorAll('.speak').forEach(x => { x.dataset.active = '0'; x.textContent = '🔊 écouter'; });
+  if (btn) { btn.dataset.active = '1'; btn.textContent = '⏹ arrêter'; }
+  setSpeaking(true);
   speechSynthesis.speak(u);
 }
 

@@ -5,8 +5,9 @@ Interface de chat pour le persona **Aether**, propulsée par l'API Groq. Design 
 ## Fonctionnalités
 
 ### Design UI/UX
-- Identité visuelle originale : logo SVG « A » dans un hexagone, dégradé violet → cyan.
-- Fond aurora animé + grille subtile, panneaux en verre dépoli (glassmorphism).
+- Identité visuelle originale : logo SVG « A » dans un hexagone, dégradé bleu → cyan.
+- Thème **navy** : fond aurora bleu animé + grille subtile, panneaux en verre dépoli (glassmorphism).
+- Animations et transitions : halo du logo, balayage lumineux de la barre supérieure, entrée des messages, ondes vocales, survol des cartes, ouverture modale.
 - Sidebar avec réglages, idées rapides, accès au prompt système.
 - Micro-interactions : messages qui montent, indicateur de frappe, ondes sonores, états de focus.
 - Rendu Markdown côté client : titres, listes, **gras**, `code` et **tableaux**.
@@ -18,8 +19,9 @@ Interface de chat pour le persona **Aether**, propulsée par l'API Groq. Design 
 - Bouton micro dans la sidebar et dans la zone de saisie.
 - Option « Envoyer après la dictée » : le message part dès que tu arrêtes de parler.
 - Option « Lire les réponses à voix haute » : Aether répond à l'oral.
-- Bouton « 🔊 écouter » sur chaque réponse pour la rejouer.
-- Recommandé : **Chrome ou Edge** (meilleur support de la Web Speech API). Les voix disponibles dépendent du système.
+- Bouton « 🔊 écouter » sur chaque réponse pour la rejouer, et bouton **« ⏹ Arrêter la voix »** pour couper la lecture en cours. Chaque réponse n'est lue qu'une seule fois.
+- Repli automatique si `ar-DZ` n'est pas supporté : `ar-SA` → `ar-EG` → `ar`.
+- Recommandé : **Chrome ou Edge** (meilleur support de la Web Speech API). Les voix disponibles dépendent du système et sont indiquées dans la sidebar.
 
 ### Persona
 - 4 modèles Groq sélectibles : `openai/gpt-oss-120b` (défaut), `qwen/qwen3.8-27b`, `openai/gpt-oss-20b`, `allam-2-7b`.
