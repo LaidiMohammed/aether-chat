@@ -3,57 +3,135 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aether — compagnon académique M1</title>
+  <meta name="theme-color" content="#0a0b14">
+  <title>Aether — compagnon académique vocal</title>
+  <link rel="icon" href="assets/aether-mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="app">
-    <header>
-      <div class="brand">
-        <div class="logo">A</div>
-        <div>
-          <h1>Aether</h1>
-          <p>Compagnon académique · M1</p>
-        </div>
+
+<div class="bg" aria-hidden="true">
+  <span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span>
+  <span class="grid"></span>
+</div>
+
+<div class="shell">
+  <aside class="sidebar glass" id="sidebar">
+    <div class="brand">
+      <div class="mark"><img src="assets/aether-mark.svg" alt="Logo Aether"></div>
+      <div>
+        <h1>Aether</h1>
+        <p>compagnon académique M1</p>
       </div>
-      <div class="controls">
-        <label>Modèle
-          <select id="model">
-            <option value="openai/gpt-oss-120b">gpt-oss-120b</option>
-            <option value="qwen/qwen3.8-27b">qwen3.8-27b</option>
-            <option value="openai/gpt-oss-20b">gpt-oss-20b</option>
-            <option value="allam-2-7b">allam-2-7b</option>
-          </select>
-        </label>
-        <label>Charge mentale
-          <select id="load">
-            <option value="">Non renseignée</option>
-            <option>1</option><option>2</option><option>3</option>
-            <option>4</option><option>5</option><option>6</option>
-            <option>7</option><option>8</option><option>9</option><option>10</option>
-          </select>
-        </label>
-      </div>
+    </div>
+
+    <div class="status"><span class="dot"></span> En ligne · propulsé par Groq</div>
+
+    <section class="panel">
+      <h2>Réglages</h2>
+      <label>Modèle
+        <select id="model">
+          <option value="openai/gpt-oss-120b">gpt-oss-120b</option>
+          <option value="qwen/qwen3.8-27b">qwen3.8-27b</option>
+          <option value="openai/gpt-oss-20b">gpt-oss-20b</option>
+          <option value="allam-2-7b">allam-2-7b</option>
+        </select>
+      </label>
+      <label>Charge mentale
+        <select id="load">
+          <option value="">Non renseignée</option>
+          <option>1</option><option>2</option><option>3</option>
+          <option>4</option><option>5</option><option>6</option>
+          <option>7</option><option>8</option><option>9</option><option>10</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="panel voice-panel">
+      <h2>Vocal <span class="badge">NEW</span></h2>
+      <label>Langue de dictée
+        <select id="voiceLang">
+          <option value="fr-FR">🇫🇷 Français</option>
+          <option value="en-US">🇬🇧 English</option>
+          <option value="ar-DZ">🇩🇿 العربية (DZ)</option>
+          <option value="ar-SA">🇸🇦 العربية (فصحى)</option>
+        </select>
+      </label>
+      <label class="switch"><input type="checkbox" id="autoSend" checked><span class="track"></span> Envoyer après la dictée</label>
+      <label class="switch"><input type="checkbox" id="autoSpeak" checked><span class="track"></span> Lire les réponses à voix haute</label>
+      <button type="button" class="talk-btn mic-trigger">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"/><path d="M5 11v1a7 7 0 0 0 14 0v-1M12 19v3"/></svg>
+        Parler avec Aether
+      </button>
+      <p class="hint">Dictée et voix : Chrome / Edge recommandés.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Idées rapides</h2>
+      <button class="quick" data-prompt="Fais-moi un plan de révision DevOps en 3 étapes, avec temps estimé.">Plan DevOps · 3 étapes</button>
+      <button class="quick" data-prompt="Génère un quiz de 5 questions progressives sur Git.">Quiz Git · 5 questions</button>
+      <button class="quick" data-prompt="Ma charge mentale est à 8/10. Aide-moi à simplifier ma journée d'étude.">Charge mentale 8/10</button>
+    </section>
+
+    <button type="button" class="ghost" id="promptBtn">Voir le prompt système</button>
+    <footer>M1 SI · Oran1 · 2026</footer>
+  </aside>
+
+  <main class="main">
+    <header class="topbar glass">
+      <button type="button" class="icon-btn" id="menuBtn" aria-label="Ouvrir le menu">☰</button>
+      <div class="mini-brand"><img src="assets/aether-mark.svg" alt=""><strong>Aether</strong></div>
+      <div class="top-status"><span class="dot"></span> En ligne</div>
+      <button type="button" class="icon-btn" id="promptBtnTop" aria-label="Prompt système">⌘</button>
     </header>
 
-    <main id="chat" class="chat" aria-live="polite">
+    <div class="voice-bar" id="voiceBar" hidden>
+      <div class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <span id="voiceText">Je t'écoute…</span>
+      <button type="button" id="stopVoice">Arrêter</button>
+    </div>
+
+    <div class="chat" id="chat" aria-live="polite">
       <div class="msg assistant">
-        <div class="who">Aether</div>
-        <div class="bubble">Salut. Je suis Aether. Pose-moi une question de cours, demande un plan de révision ou un quiz. Je réponds en court et je protège ta charge mentale.</div>
+        <div class="avatar"><img src="assets/aether-mark.svg" alt=""></div>
+        <div class="body">
+          <div class="who">Aether</div>
+          <div class="bubble">Salut. Je suis Aether, ton compagnon académique. Écris ou <strong>parle</strong> : je réponds en court, avec des plans réalistes, et je surveille ta charge mentale.</div>
+        </div>
       </div>
-    </main>
+    </div>
 
-    <form id="form" class="composer">
-      <input id="input" type="text" autocomplete="off" placeholder="Écris ton message…" maxlength="4000">
-      <button id="send" type="submit">Envoyer</button>
+    <div class="suggestions" id="suggestions">
+      <button data-prompt="Résume-moi les 3 zones de Git en 6 lignes.">Résumé Git</button>
+      <button data-prompt="Crée un quiz de 4 questions sur DevOps.">Quiz DevOps</button>
+      <button data-prompt="J'ai 3h ce soir, fais-moi un planning de révision.">Planning 3h</button>
+    </div>
+
+    <form class="composer glass" id="form">
+      <button type="button" class="mic mic-trigger" aria-label="Dicter un message" title="Dicter">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"/><path d="M5 11v1a7 7 0 0 0 14 0v-1M12 19v3"/></svg>
+      </button>
+      <textarea id="input" rows="1" maxlength="4000" placeholder="Écris ou parle… (Entrée pour envoyer)"></textarea>
+      <button type="submit" id="send" aria-label="Envoyer">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12 16-8-6 16-2.5-6.5L4 12Z"/></svg>
+        <span>Envoyer</span>
+      </button>
     </form>
+  </main>
+</div>
 
-    <details class="prompt">
-      <summary>Voir le prompt système d'Aether</summary>
-      <pre id="promptText"></pre>
-    </details>
+<div class="scrim" id="scrim"></div>
+
+<div class="modal" id="promptModal" role="dialog" aria-modal="true" aria-label="Prompt système">
+  <div class="modal-card glass">
+    <div class="modal-head">
+      <h2>Prompt système · Aether</h2>
+      <button type="button" class="icon-btn" id="closePrompt" aria-label="Fermer">✕</button>
+    </div>
+    <pre id="promptText">Chargement…</pre>
   </div>
+</div>
 
-  <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
