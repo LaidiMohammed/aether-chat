@@ -124,7 +124,10 @@ select:hover{border-color:var(--stroke-2)}
 .bubble th{background:rgba(59,130,246,.18);color:#cfe0ff}
 .speak{margin-top:8px;background:rgba(125,170,255,.06);border:1px solid var(--stroke);color:var(--muted);border-radius:8px;padding:4px 9px;font-size:10.5px;transition:.2s}
 .speak:hover{color:var(--cyan);border-color:rgba(34,211,238,.5)}
-.file-btn{display:block;margin-top:9px;background:linear-gradient(120deg,rgba(59,130,246,.26),rgba(34,211,238,.14));border:1px solid rgba(96,165,250,.45);color:#dbe9ff;border-radius:10px;padding:8px 13px;font-size:11.5px;font-weight:700;transition:transform .18s,box-shadow .25s,background .2s;animation:rise .35s ease both}
+.file-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px;animation:rise .35s ease both}
+.file-btn{background:linear-gradient(120deg,rgba(59,130,246,.26),rgba(34,211,238,.14));border:1px solid rgba(96,165,250,.45);color:#dbe9ff;border-radius:10px;padding:8px 13px;font-size:11.5px;font-weight:700;transition:transform .18s,box-shadow .25s,background .2s}
+.ghost-file{background:rgba(125,170,255,.05);border-color:var(--stroke);color:var(--muted);font-weight:600}
+.ghost-file:hover{color:#dbe9ff}
 .file-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(59,130,246,.28);background:linear-gradient(120deg,rgba(59,130,246,.4),rgba(34,211,238,.24))}
 .bubble.error{border-color:rgba(252,165,165,.45);color:var(--danger)}
 .typing{display:inline-flex;gap:4px;padding:4px 0}
@@ -158,6 +161,10 @@ select:hover{border-color:var(--stroke-2)}
 .modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .modal-head h2{margin:0;font-size:15px}
 .modal pre{overflow:auto;white-space:pre-wrap;background:rgba(2,8,22,.4);border:1px solid var(--stroke);border-radius:14px;padding:16px;font:12px/1.65 ui-monospace,Consolas,monospace;color:#cbdcf8}
+.modal-card .table-wrap{margin:0}
+.modal-card table{border-collapse:collapse;width:100%;font-size:12.5px}
+.modal-card th,.modal-card td{border:1px solid var(--stroke-2);padding:7px 9px;text-align:left;vertical-align:top}
+.modal-card th{background:rgba(59,130,246,.18);color:#cfe0ff}
 
 /* ---------- responsive ---------- */
 @media(max-width:980px){

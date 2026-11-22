@@ -31,7 +31,7 @@ Interface de chat pour le persona **Aether**, propulsée par l'API Groq. Design 
 
 ### Fichiers générés
 - Aether peut produire un **Excel (.xlsx)** ou un **PDF** quand tu demandes un plan d'études, un plan de compétences ou un livrable.
-- Le modèle renvoie un bloc `<<<FILE>>>` avec les colonnes et les lignes ; l'interface affiche un bouton **Télécharger** et génère le fichier dans le navigateur (SheetJS + jsPDF).
+- Le modèle renvoie un bloc `<<<FILE>>>` avec les colonnes et les lignes ; l'interface affiche deux boutons : **Télécharger** et **Voir** (`👁 Voir le PDF` ouvre le PDF dans un nouvel onglet, `👁 Aperçu du tableau` affiche l'Excel dans une fenêtre). Génération côté navigateur (SheetJS + jsPDF).
 - Repli automatique : si SheetJS est indisponible, le fichier est généré en **CSV** lisible par Excel.
 - Raccourcis « Plan Excel » et « Skills plan PDF » dans la sidebar.
 

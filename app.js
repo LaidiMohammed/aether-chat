@@ -106,9 +106,9 @@ function makeXlsx(spec) {
   downloadBlob(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }), (spec.filename || 'plan.csv').replace(/\.xlsx$/i, '.csv'));
 }
 
-function makePdf(spec) {
+function buildPdf(spec) {
   const JsPDF = window.jspdf && window.jspdf.jsPDF;
-  if (!JsPDF) { addMessage('assistant', 'La librairie PDF nest pas disponible. Demande un fichier Excel à la place.', true); return; }
+  if (!JsPDF) { addMessage('assistant', 'La librairie PDF nest pas disponible. Demande un fichier Excel à la place.', true); return null; }
   const doc = new JsPDF();
   const headers = spec.headers || [], rows = spec.rows || [];
   const cols = Math.max(headers.length, 1);
@@ -131,17 +131,49 @@ function makePdf(spec) {
   };
   drawRow(headers, true);
   rows.forEach(r => drawRow(r, false));
-  doc.save(spec.filename || 'plan.pdf');
+  return doc.output('blob');
+}
+function makePdf(spec) {
+  const blob = buildPdf(spec);
+  if (blob) downloadBlob(blob, spec.filename || 'plan.pdf');
+}
+function viewPdf(spec) {
+  const blob = buildPdf(spec);
+  if (!blob) return;
+  const url = URL.createObjectURL(blob);
+  const w = window.open(url, '_blank');
+  if (!w) addMessage('assistant', 'Pop-up bloquée : autorise les fenêtres ou utilise « Télécharger le PDF ».', true);
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+function showTablePreview(spec) {
+  const heads = (spec.headers || []).map(h => '<th>' + esc(h) + '</th>').join('');
+  const rows = (spec.rows || []).map(r => '<tr>' + (r || []).map(c => '<td>' + esc(c) + '</td>').join('') + '</tr>').join('');
+  const wrap = document.createElement('div');
+  wrap.className = 'modal show';
+  wrap.innerHTML = '<div class="modal-card glass"><div class="modal-head"><h2>' + esc(spec.title || 'Apercu') + '</h2><button type="button" class="icon-btn">✕</button></div><div class="table-wrap"><table><thead><tr>' + heads + '</tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+  document.body.appendChild(wrap);
+  const close = () => wrap.remove();
+  wrap.querySelector('button').addEventListener('click', close);
+  wrap.addEventListener('click', e => { if (e.target === wrap) close(); });
+  document.addEventListener('keydown', function h(e) { if (e.key === 'Escape') { close(); document.removeEventListener('keydown', h); } });
 }
 
 function addFileButton(body, spec) {
   if (!spec || !['xlsx', 'pdf'].includes(spec.type)) return;
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className = 'file-btn';
-  btn.textContent = spec.type === 'xlsx' ? '📊 Télécharger le Excel' : '📄 Télécharger le PDF';
-  btn.addEventListener('click', () => spec.type === 'xlsx' ? makeXlsx(spec) : makePdf(spec));
-  body.appendChild(btn);
+  const box = document.createElement('div');
+  box.className = 'file-actions';
+  const dl = document.createElement('button');
+  dl.type = 'button';
+  dl.className = 'file-btn';
+  dl.textContent = spec.type === 'xlsx' ? '📊 Télécharger le Excel' : '📄 Télécharger le PDF';
+  dl.addEventListener('click', () => spec.type === 'xlsx' ? makeXlsx(spec) : makePdf(spec));
+  const view = document.createElement('button');
+  view.type = 'button';
+  view.className = 'file-btn ghost-file';
+  view.textContent = spec.type === 'xlsx' ? '👁 Aperçu du tableau' : '👁 Voir le PDF';
+  view.addEventListener('click', () => spec.type === 'xlsx' ? showTablePreview(spec) : viewPdf(spec));
+  box.append(dl, view);
+  body.appendChild(box);
 }
 
 function showTyping() {
