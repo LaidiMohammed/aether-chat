@@ -1,5 +1,11 @@
 # Aether — compagnon académique M1 (version vocale)
 
+## Versions
+- **v1** : premier persona (compagnon académique calme). Sauvegardé par le tag Git `design-v1` et une copie dans `C:\Users\pc\Documents\aether-chat-v1-backup`.
+- **v2** (actuelle) : persona « elite academic companion », réponses encore plus courtes et directement exploitables.
+
+Pour revenir à la v1 : exécuter `restore-v1.bat` (restaure les fichiers, commite, pousse et redéploie).
+
 Interface de chat pour le persona **Aether**, propulsée par l'API Groq. Design aurora / glassmorphism, logo SVG original, et conversation vocale **français · english · arabe (DZ)**.
 
 ## Fonctionnalités
