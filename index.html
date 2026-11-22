@@ -3,29 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0a0b14">
+  <meta name="theme-color" content="#F3EEE4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#151412" media="(prefers-color-scheme: dark)">
   <title>Aether — compagnon académique vocal</title>
   <link rel="icon" href="assets/aether-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Noto+Naskh+Arabic:wght@400;600&display=swap">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<div class="bg" aria-hidden="true">
-  <span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span>
-  <span class="grid"></span>
-</div>
-
 <div class="shell">
-  <aside class="sidebar glass" id="sidebar">
+  <aside class="sidebar" id="sidebar">
     <div class="brand">
       <div class="mark"><img src="assets/aether-mark.svg" alt="Logo Aether"></div>
       <div>
         <h1>Aether</h1>
-        <p>compagnon académique M1</p>
+        <p>Compagnon académique · M1</p>
       </div>
     </div>
-
-    <div class="status"><span class="dot"></span> En ligne · propulsé par Groq</div>
 
     <section class="panel">
       <h2>Réglages</h2>
@@ -48,13 +45,13 @@
     </section>
 
     <section class="panel voice-panel">
-      <h2>Vocal <span class="badge">NEW</span></h2>
+      <h2>Vocal</h2>
       <label>Langue de dictée
         <select id="voiceLang">
-          <option value="fr-FR">🇫🇷 Français</option>
-          <option value="en-US">🇬🇧 English</option>
-          <option value="ar-DZ">🇩🇿 العربية (DZ)</option>
-          <option value="ar-SA">🇸🇦 العربية (فصحى)</option>
+          <option value="fr-FR">Français</option>
+          <option value="en-US">English</option>
+          <option value="ar-DZ">العربية (DZ)</option>
+          <option value="ar-SA">العربية (فصحى)</option>
         </select>
       </label>
       <label class="switch"><input type="checkbox" id="autoSend" checked><span class="track"></span> Envoyer après la dictée</label>
@@ -66,22 +63,23 @@
 
     <section class="panel">
       <h2>Idées rapides</h2>
-      <button class="quick" data-prompt="Fais-moi un plan de révision DevOps en 3 étapes, avec temps estimé.">Plan DevOps · 3 étapes</button>
-      <button class="quick" data-prompt="Génère un quiz de 5 questions progressives sur Git.">Quiz Git · 5 questions</button>
-      <button class="quick" data-prompt="Ma charge mentale est à 8/10. Aide-moi à simplifier ma journée d'étude.">Charge mentale 8/10</button>
-      <button class="quick" data-prompt="Génère un plan d'études DevOps de 4 semaines et donne-le moi en fichier Excel.">Plan Excel</button>
-      <button class="quick" data-prompt="Fais un plan de compétences M1 SI sur 6 mois et exporte-le en PDF.">Skills plan PDF</button>
+      <div class="quick-list">
+        <button class="quick" data-prompt="Fais-moi un plan de révision DevOps en 3 étapes, avec temps estimé.">Plan DevOps · 3 étapes</button>
+        <button class="quick" data-prompt="Génère un quiz de 5 questions progressives sur Git.">Quiz Git · 5 questions</button>
+        <button class="quick" data-prompt="Ma charge mentale est à 8/10. Aide-moi à simplifier ma journée d'étude.">Charge mentale 8/10</button>
+        <button class="quick" data-prompt="Génère un plan d'études DevOps de 4 semaines et donne-le moi en fichier Excel.">Plan Excel</button>
+        <button class="quick" data-prompt="Fais un plan de compétences M1 SI sur 6 mois et exporte-le en PDF.">Skills plan PDF</button>
+      </div>
     </section>
 
     <button type="button" class="ghost" id="promptBtn">Voir le prompt système</button>
-    <footer>M1 SI · Oran1 · 2026</footer>
+    <footer>Propulsé par Groq<br>M1 SI · Oran 1 · 2026</footer>
   </aside>
 
   <main class="main">
-    <header class="topbar glass">
+    <header class="topbar">
       <button type="button" class="icon-btn" id="menuBtn" aria-label="Ouvrir le menu"><i data-lucide="menu"></i></button>
       <div class="mini-brand"><img src="assets/aether-mark.svg" alt=""><strong>Aether</strong></div>
-      <div class="top-status"><span class="dot"></span> En ligne</div>
       <button type="button" class="icon-btn" id="promptBtnTop" aria-label="Prompt système"><i data-lucide="book-open"></i></button>
     </header>
 
@@ -109,9 +107,9 @@
       <button data-prompt="Exporte un plan de compétences en PDF.">PDF</button>
     </div>
 
-    <form class="composer glass" id="form">
+    <form class="composer" id="form">
       <button type="button" class="mic mic-trigger" aria-label="Dicter un message" title="Dicter"><i data-lucide="mic"></i></button>
-      <textarea id="input" rows="1" maxlength="4000" placeholder="Écris ou parle… (Entrée pour envoyer)"></textarea>
+      <textarea id="input" rows="1" maxlength="4000" placeholder="Écris ou parle…"></textarea>
       <button type="submit" id="send" aria-label="Envoyer"><i data-lucide="send"></i><span>Envoyer</span></button>
     </form>
   </main>
@@ -120,7 +118,7 @@
 <div class="scrim" id="scrim"></div>
 
 <div class="modal" id="promptModal" role="dialog" aria-modal="true" aria-label="Prompt système">
-  <div class="modal-card glass">
+  <div class="modal-card">
     <div class="modal-head">
       <h2>Prompt système · Aether</h2>
       <button type="button" class="icon-btn" id="closePrompt" aria-label="Fermer"><i data-lucide="x"></i></button>

@@ -3,17 +3,19 @@
 ## Versions
 - **v1** : premier persona (compagnon académique calme). Sauvegardé par le tag Git `design-v1` et une copie dans `C:\Users\pc\Documents\aether-chat-v1-backup`.
 - **v2** (actuelle) : persona « elite academic companion », réponses encore plus courtes et directement exploitables.
+- Interface précédente (navy / glassmorphism) sauvegardée par le tag Git `design-navy`.
 
-Pour revenir à la v1 : exécuter `restore-v1.bat` (restaure les fichiers, commite, pousse et redéploie).
+Pour revenir à la v1 : exécuter `restore-v1.bat` (restaure les fichiers, commite, pousse et redéploie). Pour revenir au navy : `git checkout design-navy -- index.html styles.css assets/aether-mark.svg`.
 
-Interface de chat pour le persona **Aether**, propulsée par l'API Groq. Design aurora / glassmorphism, logo SVG original, et conversation vocale **français · english · arabe (DZ)**.
+Interface de chat pour le persona **Aether**, propulsée par l'API Groq. Design éditorial papier/encre, logo SVG original, et conversation vocale **français · english · arabe (DZ)**.
 
 ## Fonctionnalités
 
 ### Design UI/UX
-- Identité visuelle originale : logo SVG « A » dans un hexagone, dégradé bleu → cyan.
-- Thème **navy** : fond aurora bleu animé + grille subtile, panneaux en verre dépoli (glassmorphism).
-- Animations et transitions : halo du logo, balayage lumineux de la barre supérieure, entrée des messages, ondes vocales, survol des cartes, ouverture modale.
+- Identité visuelle **éditoriale / papier** : fond papier `#F3EEE4`, encre `#1B1A17`, accent terracotta `#B4411F`, mode sombre inclus.
+- Typographie : Newsreader (serif) pour la conversation, Inter (sans) pour l'interface, IBM Plex Mono pour les étiquettes, Noto Naskh Arabic pour l'arabe.
+- Logo SVG minimaliste : « A » en traits d'encre, sans dégradé ni halo.
+- Animations discrètes : fondu des messages, ondes vocales, survol souligné des idées rapides, ouverture modale. Pas de glass ni de glow.
 - Sidebar avec réglages, idées rapides, accès au prompt système.
 - Micro-interactions : messages qui montent, indicateur de frappe, ondes sonores, états de focus.
 - Rendu Markdown côté client : titres, listes, **gras**, `code` et **tableaux**.
