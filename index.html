@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aether — compagnon académique M1</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">A</div>
+        <div>
+          <h1>Aether</h1>
+          <p>Compagnon académique · M1</p>
+        </div>
+      </div>
+      <div class="controls">
+        <label>Modèle
+          <select id="model">
+            <option value="openai/gpt-oss-120b">gpt-oss-120b</option>
+            <option value="qwen/qwen3.8-27b">qwen3.8-27b</option>
+            <option value="openai/gpt-oss-20b">gpt-oss-20b</option>
+            <option value="allam-2-7b">allam-2-7b</option>
+          </select>
+        </label>
+        <label>Charge mentale
+          <select id="load">
+            <option value="">Non renseignée</option>
+            <option>1</option><option>2</option><option>3</option>
+            <option>4</option><option>5</option><option>6</option>
+            <option>7</option><option>8</option><option>9</option><option>10</option>
+          </select>
+        </label>
+      </div>
+    </header>
+
+    <main id="chat" class="chat" aria-live="polite">
+      <div class="msg assistant">
+        <div class="who">Aether</div>
+        <div class="bubble">Salut. Je suis Aether. Pose-moi une question de cours, demande un plan de révision ou un quiz. Je réponds en court et je protège ta charge mentale.</div>
+      </div>
+    </main>
+
+    <form id="form" class="composer">
+      <input id="input" type="text" autocomplete="off" placeholder="Écris ton message…" maxlength="4000">
+      <button id="send" type="submit">Envoyer</button>
+    </form>
+
+    <details class="prompt">
+      <summary>Voir le prompt système d'Aether</summary>
+      <pre id="promptText"></pre>
+    </details>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

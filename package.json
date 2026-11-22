@@ -1,0 +1,12 @@
+{
+  "name": "aether-chat",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aether - academic companion for M1 students, powered by Groq",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
