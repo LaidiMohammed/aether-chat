@@ -57,7 +57,7 @@ module.exports = async function handler(req, res) {
       ? { role: 'system', content: `Mental load signaled by the user: ${load}/10. Apply the mental load rules accordingly.` }
       : null;
     const langNote = language
-      ? { role: 'system', content: `The user is speaking in ${language}. When it is ar-DZ, the user may use Algerian Arabic (Darija) or Arabizi; understand it and reply in the same variety unless they ask otherwise. Reply in the same language as the user.` }
+      ? { role: 'system', content: `The user is speaking in ${language}. When it is ar-DZ, the user may use Algerian Arabic (Darija) or Arabizi; understand it and reply in the same variety unless they ask otherwise. ALWAYS answer in the same language as the user's last message (French, English or Arabic).` }
       : null;
 
     const payload = {
