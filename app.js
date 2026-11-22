@@ -70,13 +70,14 @@ function addMessage(role, text, isError = false) {
     const speakBtn = document.createElement('button');
     speakBtn.type = 'button';
     speakBtn.className = 'speak';
-    speakBtn.textContent = '🔊 écouter';
+    speakBtn.innerHTML = '<i data-lucide="volume-2"></i> écouter';
     speakBtn.addEventListener('click', () => speak(visible, null, speakBtn));
     body.appendChild(speakBtn);
   }
   wrap.appendChild(body);
   chat.appendChild(wrap);
   chat.scrollTop = chat.scrollHeight;
+  if (window.lucide) lucide.createIcons();
   return wrap;
 }
 
@@ -141,8 +142,9 @@ function viewPdf(spec) {
   const blob = buildPdf(spec);
   if (!blob) return;
   const url = URL.createObjectURL(blob);
-  const w = window.open(url, '_blank');
-  if (!w) addMessage('assistant', 'Pop-up bloquée : autorise les fenêtres ou utilise « Télécharger le PDF ».', true);
+  const a = document.createElement('a');
+  a.href = url; a.target = '_blank'; a.rel = 'noopener';
+  document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 function showTablePreview(spec) {
@@ -165,15 +167,16 @@ function addFileButton(body, spec) {
   const dl = document.createElement('button');
   dl.type = 'button';
   dl.className = 'file-btn';
-  dl.textContent = spec.type === 'xlsx' ? '📊 Télécharger le Excel' : '📄 Télécharger le PDF';
+  dl.innerHTML = spec.type === 'xlsx' ? '<i data-lucide="file-spreadsheet"></i> Télécharger le Excel' : '<i data-lucide="file-text"></i> Télécharger le PDF';
   dl.addEventListener('click', () => spec.type === 'xlsx' ? makeXlsx(spec) : makePdf(spec));
   const view = document.createElement('button');
   view.type = 'button';
   view.className = 'file-btn ghost-file';
-  view.textContent = spec.type === 'xlsx' ? '👁 Aperçu du tableau' : '👁 Voir le PDF';
+  view.innerHTML = '<i data-lucide="eye"></i> ' + (spec.type === 'xlsx' ? 'Aperçu du tableau' : 'Voir le PDF');
   view.addEventListener('click', () => spec.type === 'xlsx' ? showTablePreview(spec) : viewPdf(spec));
   box.append(dl, view);
   body.appendChild(box);
+  if (window.lucide) lucide.createIcons();
 }
 
 function showTyping() {
@@ -355,8 +358,9 @@ function setSpeaking(on) {
   const b = $('stopSpeech');
   if (b) b.hidden = !on;
   document.querySelectorAll('.speak').forEach(x => {
-    x.textContent = (on && x.dataset.active === '1') ? '⏹ arrêter' : '🔊 écouter';
+    x.innerHTML = (on && x.dataset.active === '1') ? '<i data-lucide="volume-x"></i> arrêter' : '<i data-lucide="volume-2"></i> écouter';
   });
+  if (window.lucide) lucide.createIcons();
 }
 function stopSpeech() {
   if ('speechSynthesis' in window) speechSynthesis.cancel();
@@ -384,8 +388,9 @@ function speak(text, lang, btn) {
   const short = u.lang.split('-')[0].toLowerCase();
   const v = voices.find(v => v.lang.toLowerCase().startsWith(short));
   if (v) u.voice = v;
-  document.querySelectorAll('.speak').forEach(x => { x.dataset.active = '0'; x.textContent = '🔊 écouter'; });
-  if (btn) { btn.dataset.active = '1'; btn.textContent = '⏹ arrêter'; }
+  document.querySelectorAll('.speak').forEach(x => { x.dataset.active = '0'; x.innerHTML = '<i data-lucide="volume-2"></i> écouter'; });
+  if (btn) { btn.dataset.active = '1'; btn.innerHTML = '<i data-lucide="volume-x"></i> arrêter'; }
+  if (window.lucide) lucide.createIcons();
   setSpeaking(true);
   speechSynthesis.speak(u);
 }
@@ -412,3 +417,5 @@ $('menuBtn').addEventListener('click', () => {
 });
 
 fetch('system-prompt.md').then(r => r.text()).then(t => { $('promptText').textContent = t; }).catch(() => {});
+
+if (window.lucide) lucide.createIcons();

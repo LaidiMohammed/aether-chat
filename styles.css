@@ -149,7 +149,11 @@ select:hover{border-color:var(--stroke-2)}
 #send{display:flex;align-items:center;gap:8px;border:0;border-radius:12px;padding:0 17px;height:42px;font-weight:750;color:#04101f;background:linear-gradient(120deg,var(--blue-2),var(--cyan));transition:transform .18s,box-shadow .25s,opacity .2s}
 #send:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(34,211,238,.25)}
 #send:disabled{opacity:.45;cursor:wait}
-#send svg{width:17px;height:17px;fill:currentColor;stroke:none}
+#send svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.icon-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.speak,.file-btn{display:inline-flex;align-items:center;gap:6px}
+.speak svg,.file-btn svg,.stop-voice svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.stop-voice{display:inline-flex;align-items:center;justify-content:center;gap:8px}
 
 /* ---------- modal ---------- */
 .scrim{position:fixed;inset:0;z-index:8;background:rgba(2,7,18,.72);opacity:0;pointer-events:none;transition:.3s}

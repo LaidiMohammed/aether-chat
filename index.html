@@ -59,11 +59,8 @@
       </label>
       <label class="switch"><input type="checkbox" id="autoSend" checked><span class="track"></span> Envoyer après la dictée</label>
       <label class="switch"><input type="checkbox" id="autoSpeak" checked><span class="track"></span> Lire les réponses à voix haute</label>
-      <button type="button" class="talk-btn mic-trigger">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"/><path d="M5 11v1a7 7 0 0 0 14 0v-1M12 19v3"/></svg>
-        Parler avec Aether
-      </button>
-      <button type="button" class="ghost stop-voice" id="stopSpeech" hidden>⏹ Arrêter la voix</button>
+      <button type="button" class="talk-btn mic-trigger"><i data-lucide="mic"></i> Parler avec Aether</button>
+      <button type="button" class="ghost stop-voice" id="stopSpeech" hidden><i data-lucide="square"></i> Arrêter la voix</button>
       <p class="hint" id="voiceHint">Dictée et voix : Chrome / Edge recommandés.</p>
     </section>
 
@@ -82,10 +79,10 @@
 
   <main class="main">
     <header class="topbar glass">
-      <button type="button" class="icon-btn" id="menuBtn" aria-label="Ouvrir le menu">☰</button>
+      <button type="button" class="icon-btn" id="menuBtn" aria-label="Ouvrir le menu"><i data-lucide="menu"></i></button>
       <div class="mini-brand"><img src="assets/aether-mark.svg" alt=""><strong>Aether</strong></div>
       <div class="top-status"><span class="dot"></span> En ligne</div>
-      <button type="button" class="icon-btn" id="promptBtnTop" aria-label="Prompt système">⌘</button>
+      <button type="button" class="icon-btn" id="promptBtnTop" aria-label="Prompt système"><i data-lucide="book-open"></i></button>
     </header>
 
     <div class="voice-bar" id="voiceBar" hidden>
@@ -113,14 +110,9 @@
     </div>
 
     <form class="composer glass" id="form">
-      <button type="button" class="mic mic-trigger" aria-label="Dicter un message" title="Dicter">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"/><path d="M5 11v1a7 7 0 0 0 14 0v-1M12 19v3"/></svg>
-      </button>
+      <button type="button" class="mic mic-trigger" aria-label="Dicter un message" title="Dicter"><i data-lucide="mic"></i></button>
       <textarea id="input" rows="1" maxlength="4000" placeholder="Écris ou parle… (Entrée pour envoyer)"></textarea>
-      <button type="submit" id="send" aria-label="Envoyer">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12 16-8-6 16-2.5-6.5L4 12Z"/></svg>
-        <span>Envoyer</span>
-      </button>
+      <button type="submit" id="send" aria-label="Envoyer"><i data-lucide="send"></i><span>Envoyer</span></button>
     </form>
   </main>
 </div>
@@ -131,7 +123,7 @@
   <div class="modal-card glass">
     <div class="modal-head">
       <h2>Prompt système · Aether</h2>
-      <button type="button" class="icon-btn" id="closePrompt" aria-label="Fermer">✕</button>
+      <button type="button" class="icon-btn" id="closePrompt" aria-label="Fermer"><i data-lucide="x"></i></button>
     </div>
     <pre id="promptText">Chargement…</pre>
   </div>
@@ -139,6 +131,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
